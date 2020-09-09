@@ -1,0 +1,253 @@
+.title{
+    color: #5A5A5A;
+}
+.PublicDownWhole {
+    width:100%;
+    height: 100%;
+    padding: 60px 0 0 0;
+    /*text-align: center;*/
+}
+
+.InquireSelectTable {
+    /*margin: 20px 7% ;*/
+    /*overflow: auto;*/
+}
+
+.riqi li {
+    display: inline;
+    float: left;
+    height: 50px;
+    width: 19%;
+    border: solid 3px #9cd564;
+    margin: 0px -3px -3px 0px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.riqi li a {
+    text-decoration: none;
+    display: block;
+    height: 50px;
+    width: 100%;
+    color: #094409;
+}
+
+.riqi li a:hover {
+    background-color: #9cd564;
+    color: #FFFFFF;
+}
+
+.PublicTableCss {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ccc;
+    width: 96.5%;
+    /*height: 100px;*/
+    color: #494747;
+}
+
+.PublicTableCss thead {
+    background: #9cd564;
+}
+
+.PublicTableCss thead tr {
+    height: 65px;
+}
+
+.PublicTableCss thead tr td {
+    max-width: 135px;
+    padding: 10px 15px;
+    text-align: center;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.PublicTableCss thead tr td::before {
+    position: absolute;
+    content: "";
+    right: 0.5px;
+    top: 50%;
+    width: 1px;
+    height: 70%;
+    background: #fff;
+    -webkit-transform: translate(0%, -50%);
+    -moz-transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%);
+    -o-transform: translate(0%, -50%);
+    transform: translate(0%, -50%);
+}
+
+.PublicTableCss thead tr td:last-child::before {
+    display: none;
+}
+
+.PublicTableCss tbody {
+}
+
+.PublicTableCss tbody tr {
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+
+}
+
+.PublicTableCss tbody tr:hover {
+    background: #f3f3f3;
+    transition: all ease .3s;
+}
+
+.PublicTableCss tbody tr td {
+    max-width: 400px;
+    font-size: 14px;
+    /*padding: 5px 5px;*/
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*white-space: nowrap;*/
+}
+
+/*.PublicTableCss tbody tr td::before { position: absolute; content: ""; right: 0.5px; top: 50%; width: 1px; height: 70%; background: #ccc; -webkit-transform: translate(0%,-50%); -moz-transform: translate(0%,-50%); -ms-transform: translate(0%,-50%); -o-transform: translate(0%,-50%); transform: translate(0%,-50%); }*/
+.PublicTableCss tbody tr td:last-child::before {
+    display: none;
+}
+
+.PublicTableCss tbody tr td .productImgBox {
+    width: 65px;
+    height: 65px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.PublicTableBtnIcon {
+    /*display: inline-block;*/
+    color: #fff;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+
+.PublicTableBtnIcon i {
+    vertical-align: middle;
+}
+
+.PublicTableBtnIcon span {
+    vertical-align: middle;
+}
+
+.Color3Btn {
+    background: #9cd564;
+}
+
+.Color3Btn:hover {
+    background: #69d53a;
+    transition: all ease .3s;
+}
+
+.Color3Btn1 {
+    background: #faa51a;
+}
+
+.Color3Btn1:hover {
+    background: #f59b07;
+    transition: all ease .3s;
+}
+
+.Color3Btn2 {
+    background: #547fd4;
+}
+
+.Color3Btn2:hover {
+    background: #1458de;
+    transition: all ease .3s;
+}
+
+.PageNumber {
+    padding: 20px 10px 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+.LeftArrow, .RightArrow {
+    font-size: 14px;
+    padding: 5px 10px;
+    color: #647686;
+    padding: 0 12px;
+    cursor: pointer;
+    line-height: 30px;
+}
+
+.LeftArrow {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    float: left;
+    height: 30px;
+    margin: 0 0 -1px -1px;
+}
+
+.RightArrow {
+    border-left: 0px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    float: right;
+}
+
+.LeftArrow:hover {
+    color: #fff;
+    background: #9cd564;
+    border: 1px solid #5cfe43;
+}
+
+.RightArrow:hover {
+    color: #fff;
+    background: #9cd564;
+    border: 1px solid #5cfe43;
+    border-left: 0;
+}
+
+.NumbersBox {
+    display: inline-block;
+    width: auto;
+}
+
+.NumbersBox ul {
+    display: inline-block;
+}
+
+.NumbersBox ul li {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    float: left;
+    color: #000;
+    line-height: 30px;
+}
+
+.NumbersBox ul li a:hover {
+    color: #fff;
+    background: #9cd564;
+    transition: all ease .4s;
+    -webkit-transition: all ease .4s;
+    -moz-transition: all ease .4s;
+    -ms-transition: all ease .4s;
+    -o-transition: all ease .4s;
+    cursor: pointer;
+    border-right: 1px solid #5cfe43;
+    border-top: 1px solid #5cfe43;
+    border-bottom: 1px solid #5cfe43;
+}
+
+.NumbersBox ul li a {
+    display: block;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+}
+
+a {
+    text-decoration: none
+}
