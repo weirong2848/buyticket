@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.0.2/vue.global.js"></script>
+    <script src="https://cdn.staticfile.org/axios/0.21.1/axios.min.js"></script>
+
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+    <script>
+
+        const app = Vue.createApp({
+
+            data() {
+                return{
+                    isShow : false,
+                    list: []
+                }
+            },
+
+            methods:{
+               getTiao(){
+                   this.isShow = !this.isShow;
+                    axios.post('http://localhost:8081/management/selectAllRoute')
+                        .then(res =>{
+                            this.list = res.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }
+            },
+
+            template:`
+            <div>
+            <button @click="getTiao">显示/隐藏路线</button>
+            <ul v-if="isShow == true">
+                 <li v-if="isShow == true">路线编号 出发地 到达地 价格</li>
+                 <li v-for="item of list">{{item.routeNum}} {{item.departurePlace}} {{item.arrivalPlace}} {{item.minPrice}}</li>
+            </ul>
+            </div>
+            `
+        })
+        const vm = app.mount("#app")
+    </script>
+</html>

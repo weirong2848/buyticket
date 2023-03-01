@@ -1,0 +1,27 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: shiro
+  thymeleaf:
+    prefix: classpath:/thymeleaf/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+  datasource:
+    url: jdbc:mysql://localhost:3306/buyticket?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    static-path-pattern: /**
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.entity
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

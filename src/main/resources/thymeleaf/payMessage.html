@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>支付信息</title>
+    <link href="../css/payMessage.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/pay2.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript"  th:inline="javascript">
+        $(function () {
+            var region = $("#region");
+            var number_this = $("#number_this");
+            var name = $("#name_");
+            var phone = $("#phone");
+            $("#sub_setID").click(function () {
+                var input_out = $(".input_style");
+                for (var i = 0; i <= input_out.length; i++) {
+                    if ($(input_out[i]).val() == "") {
+                        $(input_out[i]).css("border", "1px solid red");
+
+                        return false;
+                    } else {
+                        $(input_out[i]).css("border", "1px solid #cccccc");
+                    }
+                }
+            });
+            var span_momey = $(".span_momey");
+            var b = 0;
+            for (var i = 0; i < span_momey.length; i++) {
+                b += parseFloat($(span_momey[i]).html());
+            }
+            var out_momey = $(".out_momey");
+            out_momey.html(b);
+            $(".shade_content").hide();
+            $(".shade").hide();
+            $('.nav_mini ul li').hover(function () {
+                $(this).find('.two_nav').show(100);
+            }, function () {
+                $(this).find('.two_nav').hide(100);
+            })
+            $('.left_nav').hover(function () {
+                $(this).find('.nav_mini').show(100);
+            }, function () {
+                $(this).find('.nav_mini').hide(100);
+            })
+            $('#jia').click(function () {
+                $('input[name=num]').val(parseInt($('input[name=num]').val()) + 1);
+            })
+            $('#jian').click(function () {
+                $('input[name=num]').val(parseInt($('input[name=num]').val()) - 1);
+            })
+            $('.Caddress .add_mi').click(function () {
+                $(this).css('background', 'url("../images/mail_1.jpg") no-repeat').siblings('.add_mi').css('background',
+                    'url("../images/mail.jpg") no-repeat')
+            })
+        })
+        var x = Array();
+
+        function func(a, b) {
+            x[b] = a.html();
+            alert(x)
+            a.css('border', '2px solid #f00').siblings('.min_mx').css('border', '2px solid #ccc');
+        }
+
+        function onclick_close() {
+            var shade_content = $(".shade_content");
+            var shade = $(".shade");
+            shade_content.hide();
+            shade.hide();
+            // if (confirm("确认关闭么！此操作不可恢复")) {
+            //
+            // }
+        }
+
+        function onclick_open() {
+            $(".shade_content").show();
+            $(".shade").show();
+            var input_out = $(".input_style");
+            for (var i = 0; i <= input_out.length; i++) {
+                if ($(input_out[i]).val() != "") {
+                    $(input_out[i]).val("");
+                }
+            }
+        }
+
+        function IdCodeValid(code) {
+            //身份证号合法性验证
+            //支持15位和18位身份证号
+            //支持地址编码、出生日期、校验位验证
+            var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
+            var row = "验证成功";
+            if (!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(code)) {
+                row = "身份证号格式错误";
+            } else if (!city[code.substr(0, 2)]) {
+                row = "身份证号地址编码错误";
+            } else {
+                //18位身份证需要验证最后一位校验位
+                if (code.length == 18) {
+                    code = code.split('');
+                    //∑(ai×Wi)(mod 11)
+                    //加权因子
+                    var factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+                    //校验位
+                    var parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2];
+                    var sum = 0;
+                    var ai = 0;
+                    var wi = 0;
+                    for (var i = 0; i < 17; i++) {
+                        ai = code[i];
+                        wi = factor[i];
+                        sum += ai * wi;
+                    }
+                    if (parity[sum % 11] != code[17].toUpperCase()) {
+                        row = "身份证号校验位错误";
+                    }
+                }
+            }
+            return row;
+        }
+
+        function insertBuyUser() {
+            var username = document.getElementById("username").innerText;
+            var idnumber = document.getElementById("idnumber").value;
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var regPhone = /^[1][3,4,5,7,8][0-9]{9}$/;
+            var regName = /^[\u4e00-\u9fa5]{2,4}$/;
+            if (idnumber != "" && name != "" && phone != "") {
+                if (IdCodeValid(idnumber) == "验证成功") {
+                    if (regName.test(name) == true) {
+                        if (regPhone.test(phone) == true) {
+                            $.ajax({
+                                type: "post",
+                                url: "../user/istBuyUser",
+                                cache: true,
+                                datatype: "json",
+                                data: {
+                                    username: username,
+                                    idnumber: idnumber,
+                                },
+                                success: function (data) {
+                                    if (data == 0) {
+                                        $.ajax({
+                                            type: "post",
+                                            url: "../user/insertBuyUser",
+                                            cache: true,
+                                            datatype: "json",
+                                            data: {
+                                                username: username,
+                                                idnumber: idnumber,
+                                                name: name,
+                                                phone: phone,
+                                            },
+                                            success: function (data) {
+                                                alert("添加成功");
+                                                window.location.href = "../index/getReadyPay";
+                                            },
+                                            error: function () {
+                                            }
+                                        });
+                                    } else {
+                                        alert("添加的乘车人信息已存在")
+                                    }
+                                },
+                                error: function () {
+                                }
+                            });
+
+                        } else {
+                            alert("手机号输入错误");
+                        }
+                    } else {
+                        alert("姓名输入错误");
+                    }
+                } else {
+                    alert(IdCodeValid(idnumber));
+                }
+            } else {
+                alert("输入的内容不能为空");
+            }
+        }
+
+        var idnumber =1;
+        var name;
+        var phone;
+
+        function getBuyUser(odj) {
+            idnumber = $(odj).attr("idnumber");
+            name = $(odj).attr("name");
+            phone = $(odj).attr("phone");
+            // Substring(0, 14) + "****"
+        }
+
+        function getpay() {
+           var username = document.getElementById("username").innerText;
+           var flightNumber = document.getElementById("flightNumber").innerText;
+           var data = [[${data}]];
+           var money = document.getElementById("money").innerText;
+           if(idnumber == 1){
+               alert("请选择乘车人");
+           }else{
+               $.ajax({
+                   type: "post",
+                   url: "../pay/getPay",
+                   cache: true,
+                   datatype: "json",
+                   data: {
+                       username: username,
+                       idnumber: idnumber,
+                       name: name,
+                       phone: phone,
+                       flightNumber:flightNumber,
+                       data:data,
+                       money:money,
+                   },
+                   contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                   success: function (result) {
+                       window.localStorage.setItem("payInfo",result);
+                       window.location.href="../pay/inAlipay";
+                   },
+                   error: function () {
+                   }
+               });
+           }
+
+        }
+    </script>
+    <style type="text/css">
+        .w {
+            /*版心*/
+            width: 1200px;
+            margin: auto;
+        }
+
+        body {
+            font: 12px/180% Arial, Helvetica, sans-serif, "Microsoft YaHei";
+        }
+
+        .center {
+            width: 1200px;
+            margin: 0 auto;
+            padding-top: 40px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<top>
+    <section class="seck">
+        <div class="register_login">
+            <em>您好</em>
+            <span th:text="${session.username}" id="username"></span>
+        </div>
+    </section>
+</top>
+<div>
+    <div class="Caddress" style="height: 250px;width: 1148px;background-color: white">
+        <br>
+        <div class="open_new">
+            <button class="open_btn" onclick="javascript:onclick_open();" style="cursor: pointer">添加新的乘车人</button>
+        </div>
+        <br>
+        <div style="margin: 0 50px;">
+            <tr th:each="buyUser:${list}">
+                <div class="add_mi" th:idnumber="${buyUser.idnumber}" th:name="${buyUser.name}"  th:phone="${buyUser.phone}"onclick="getBuyUser(this)">
+                    <p style="border-bottom:1px dashed #ccc;line-height:28px;">身份证号：<span id="getIdNumber"><td
+                            th:text="${buyUser.idnumber}"></td></span></p>
+                    <p style="border-bottom:1px dashed #ccc;line-height:28px;">姓名：<span><td
+                            th:text="${buyUser.name}"></td></span></p>
+                    <p style="border-bottom:1px dashed #ccc;line-height:28px;">手机号码：<span><td
+                            th:text="${buyUser.phone}"></td></span></p>
+                </div>
+            </tr>
+        </div>
+    </div>
+    <div style="margin: 0 0 100px 8%">
+        <div style="float: left;width: 45%">
+            <div class="module-privilege">
+                <ul class="privilege-itemul" style="background-color:#FFFACD">车票信息</ul>
+                <ul class="privilege-ul name-ul">
+                    <li class="privilege-item" style="background: #fbf9f8">
+                        <a>班次号</a>
+                    </li>
+                    <li class="privilege-item" style="background-color:#FFFACD">
+                        <a>出发站-到达站</a>
+                    </li>
+                    <li class="privilege-item" style="background: #fbf9f8">
+                        <a>发车时间</a>
+                    </li>
+                    <li class="privilege-item" style="background-color:#FFFACD">
+                        <a>里程</a>
+                    </li>
+                </ul>
+                <ul class="privilege-ul vip-ul ">
+                    <li class="privilege-item" style="background: #fbf9f8"  id="flightNumber">
+                        <td th:text="${ticket.flightNumber}"></td>
+                    </li>
+                    <li class="privilege-item" style="background-color:#FFFACD">
+                        <td th:text="${ticket.departureStation}"></td>
+                        -
+                        <td th:text="${ticket.arrivalStation}"></td>
+                    </li>
+                    <li class="privilege-item" style="background: #fbf9f8">
+                        <td th:text="${data}"></td>&nbsp;&nbsp;<td th:text="${ticket.time}"></td>
+                    </li>
+                    <li class="privilege-item" style="background-color:#FFFACD">
+                        <td th:text="${ticket.mileage}"></td>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="shade_content">
+            <div class="col-xs-12 shade_colse">
+                <button onclick="javascript:onclick_close();">x</button>
+            </div>
+            <div class="nav shade_content_div">
+                <div class="col-xs-12 shade_title">
+                    新增乘车人
+                </div>
+                <div class="col-xs-12 shade_from">
+                    <div class="col-xs-12">
+                        <span class="span_style">身份证号</span>
+                        <input class="input_style" type="" name="idnumber" id="idnumber" value=""
+                               placeholder="&nbsp;&nbsp;请输入身份证号"/>
+                    </div>
+                    <div class="col-xs-12">
+                        <span class="span_style">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span>
+                        <input class="input_style" type="" name="name" id="name" value=""
+                               placeholder="&nbsp;&nbsp;请输入您的姓名"/>
+                    </div>
+                    <div class="col-xs-12">
+                        <span class="span_style">手机号码</span>
+                        <input class="input_style" type="" name="phone" id="phone" value=""
+                               placeholder="&nbsp;&nbsp;请输入您的手机号码"/>
+                    </div>
+                    <div class="col-xs-12">
+                        <input class="btn_remove" type="button" onclick="javascript:onclick_close();" value="取消"/>
+                        <input type="submit" class="sub_set" id="sub_setID" value="提交" onclick="insertBuyUser()"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="float: left;width: 45%;margin-right: 100px">
+            <div class="module-privilege">
+                <ul class="privilege-itemul"  style="background-color:#FFFACD">支付信息</ul>
+                <ul class="privilege-ul name-ul">
+                    <li class="privilege-item" style="background: #fbf9f8">
+                        <a>支付方式</a>
+                    </li>
+                    <li class="privilege-item"  style="background-color:#FFFACD">
+                        <a>票价</a>
+                    </li>
+                    <li class="privilege-item" style="background: #fbf9f8">
+                        <a>服务费</a>
+                    </li>
+                    <li class="privilege-item" style="background-color:#FFFACD">
+                        <a>总价</a>
+                    </li>
+                </ul>
+                <ul class="privilege-ul vip-ul ">
+                    <li class="privilege-item" style="background: #fbf9f8"><img style="width:auto; height:45px"
+                                                                                src="../images/zhifubao.jpg"></li>
+                    <li class="privilege-item" style="color:red;background-color:#FFFACD">
+                        ¥
+                        <td th:text="${ticket.price}"></td>
+                    </li>
+                    <li class="privilege-item" style="background: #fbf9f8;color: red">¥3.0</li>
+                    <li class="privilege-item" style="background-color:#FFFACD;color: red" >
+                        ¥
+                       <span id="money"><td th:text="${ticket.price + 3}"></td></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style=";margin: 30% 42% 0px">
+        <input class="button orange" type="button" value="提交订单并支付" onclick="getpay()"/>
+    </div>
+
+</div>
+<footer>
+    <div class="pc-footer-lin" style="margin-top: 20px;height: auto;width: auto;background-color: #e9e9e9">
+        <div class="center">
+            <p>
+                <!--                友情链接：-->
+                <!--                <a href="" target="_blank"></a>-->
+            </p>
+            <p style="padding-bottom:30px;text-align: center">Copyright©2020-2020 吉林省长途汽车购票系统 版权所有</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

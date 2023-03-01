@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="../css/reset.css" rel="stylesheet" />
+    <link href="../css/iconfont.css" rel="stylesheet" />
+    <link href="../css/index.css" rel="stylesheet" />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/management.js"></script>
+<!--    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>-->
+    <title>管理页面</title>
+    <style>
+        .button {
+            display: inline-block;
+            zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+            *display: inline;
+            vertical-align: baseline;
+            margin: 0 2px;
+            outline: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font: 14px/100% Arial, Helvetica, sans-serif;
+            padding: .5em 2em .55em;
+            text-shadow: 0 1px 1px rgba(0,0,0,.3);
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            border-radius: .5em;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+            box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        }
+        .button:hover {
+            text-decoration: none;
+        }
+        .button:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .bigrounded {
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
+        .white {
+            color: #606060;
+            border: solid 1px #b7b7b7;
+            background: #fff;
+            background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+            background: -moz-linear-gradient(top,  #fff,  #ededed);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+        }
+        .white:hover {
+            background: #ededed;
+            background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+            background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+
+        }
+        .white:active {
+            color: #999;
+            background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+            background: -moz-linear-gradient(top,  #ededed,  #fff);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+        }
+        input[type="password"] {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            height: -webkit-calc(3em + 2px);
+            height: calc(3em + 2px);
+            margin: 0 0 1em;
+            padding: 1em;
+            border: 1px solid #cccccc;
+            border-radius: 1.5em;
+            background: #fff;
+            resize: none;
+            outline: none;
+        }
+        input[type="password"][required]:focus {
+            border-color: #9cd564;
+        }
+        input[type="password"][required]:focus + label[placeholder]:before {
+            color: #9cd564;
+        }
+        input[type="password"][required]:focus + label[placeholder]:before,
+        input[type="password"][required]:valid + label[placeholder]:before {
+            -webkit-transition-duration: .2s;
+            transition-duration: .2s;
+            -webkit-transform: translate(0, -1.5em) scale(0.9, 0.9);
+            -ms-transform: translate(0, -1.5em) scale(0.9, 0.9);
+            transform: translate(0, -1.5em) scale(0.9, 0.9);
+        }
+        input[type="password"][required]:invalid + label[placeholder][alt]:before {
+            content: attr(alt);
+        }
+        input[type="password"][required] + label[placeholder] {
+            display: block;
+            pointer-events: none;
+            line-height: 2.3em;
+            margin-top: -webkit-calc(-3em - 2px);
+            margin-top: calc(-3em - 2px);
+            margin-bottom: -webkit-calc((3em - 1em) + 2px);
+            margin-bottom: calc((3em - 1em) + 2px);
+        }
+        input[type="password"][required] + label[placeholder]:before {
+            content: attr(placeholder);
+            display: inline-block;
+            margin: 0 -webkit-calc(1em + 2px);
+            margin: 0 calc(1em + 2px);
+            padding: 0 2px;
+            color: #898989;
+            white-space: nowrap;
+            -webkit-transition: 0.3s ease-in-out;
+            transition: 0.3s ease-in-out;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffffff));
+            background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
+            background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+            -webkit-background-size: 100% 5px;
+            background-size: 100% 5px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
+    <script type="text/javascript">
+        function updatePassword() {
+            var password = document.getElementById("password").value;
+            var newpassword1 = document.getElementById("newpassword1").value;
+            var newpassword2 = document.getElementById("newpassword2").value;
+            alert(111);
+            if(password!=""&&newpassword1!=""&&newpassword1!=""){
+                if(password==newpassword1){
+                    if(newpassword1==newpassword2){
+                        $.ajax({
+                            type: "post",
+                            url: "../login/adminUpPassword",
+                            cache: true,
+                            datatype: "json",
+                            data:{
+                                password:password,
+                                newpassword:newpassword1
+                            },
+                            success: function (data) {
+                                if(data == 0){
+                                    alert("输入的原密码不正确");
+                                }else{
+                                    alert("修改成功");
+                                    window.location.href = "login.html"
+                                }
+                            },
+                            error: function () {
+                            }
+                        });
+                    }else {
+                        alert("两次输入新密码不一致");
+                    }
+                }else {
+                    alert("旧密码和新密码一样");
+                }
+            }else {
+                alert("输入不能有空");
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="PublicHead clearfix">
+    <div class="leftBox clearfix">
+        <!--        <div class="companyLogo">-->
+        <!--            <img src="images/logo.jpg" />-->
+        <!--        </div>-->
+        <!--<i class="iconfont icon-caidan"></i>-->
+
+        <div class="companyText">
+            购票系统后台管理系统
+        </div>
+    </div>
+    <div class="RightBox clearfix">
+        <div class="UserPhotoBox">
+            <div class="UserPic">
+                <!--                <img src="images/user.jpg" />-->
+            </div>
+            <div class="UserName">
+                欢迎管理员进入
+            </div>
+        </div>
+        <a href="../index/inLogin">
+            <div class="dropOutBox">
+                <i class="iconfont icon-app_icons--">
+                </i>
+                <span>退出</span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="PublicDownWhole clearfix">
+    <!--左侧-->
+    <div class="leftBox">
+        <ul>
+            <a href="../management/inManagement"> <li><i class="iconfont "></i><span>售票所得情况</span></li></a>
+            <a href="../management/inAdmainManagement"> <li class="Select"><i class="iconfont "></i><span>登入密码修改</span></li></a>
+            <a href="../management/inOrderManagement">
+                <li ><i class="iconfont "></i><span>订单管理</span></li>
+            </a>
+            <a href="../management/inNoticeManagement">
+                <li><i class="iconfont "></i><span>公告管理</span></li>
+            </a>
+            <a href="../management/inRouteManagement">
+                <li><i class="iconfont "></i><span>路线管理</span></li>
+            </a>
+            <a href="../management/inTicketManagement">      <li><i class="iconfont "></i><span>车票管理</span></li></a>
+        </ul>
+    </div>
+    <div style="margin-left: -300px">
+    <div class="clear"></div>
+    <h3 style="text-align: center;color: rgba(0,0,0,0.71);font-size: 16px;margin-top: 30px">管理员登录密码修改</h3>
+    <div style="width: 100%;height: auto;margin-top: 30px;padding-bottom: 30px;border-bottom: 10px solid whitesmoke">
+        <div style="width:400px;height:100px;margin:0 auto">
+
+            <input required='' type='password' id="password">
+            <label alt='输入旧密码' placeholder='旧密码'></label>
+
+        </div>
+        <div style="width:400px;height:100px;margin:0 auto">
+
+            <input required='' type='password' id="newpassword1">
+            <label alt='输入新密码' placeholder='新密码'></label>
+
+        </div>
+        <div style="width:400px;height:100px;margin:0 auto">
+
+            <input required='' type='password' id="newpassword2">
+            <label alt='确认新密码' placeholder='新密码'></label>
+
+        </div>
+        <button class="button white" style="margin-left: 47%" onclick="updatePassword()" >确定</button>
+    </div>
+    <div class="clear"></div>
+</div>
+</div>
+</body>
+</html>

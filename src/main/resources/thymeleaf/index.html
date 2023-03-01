@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<html>
+	<head>
+        <meta charset="utf-8">
+		<title>吉林省长途汽车购票系统</title>
+
+		<link href="../css/style.css" rel="stylesheet" type="text/css" />
+		<link href="../css/style01.css" rel="stylesheet" type="text/css" />
+		<link href="/css/doubleDate.css" rel="stylesheet" type="text/css" />
+
+		<script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="../js/doubleDate2.0.js"></script>
+		<script type="text/javascript" src="../js/jquery.SuperSlide.2.1.1.js"></script>
+
+        <script type="text/javascript" th:inline="javascript">
+            // window.onload = function () {
+                // var d = new Date();
+                // var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+                // jQuery("#data").val(str);
+            // }
+            function change() {
+            	var departurePlace = document.getElementById("departurePlace").value;
+            	var arrivalPlace = document.getElementById("arrivalPlace").value; {
+            		document.getElementById("arrivalPlace").value = departurePlace;
+            		document.getElementById("departurePlace").value = arrivalPlace;
+            	}
+            }
+
+            $(function() {
+            	$('.doubledate').kuiDate({
+            		className: 'doubledate',
+            		isDisabled: "0" // isDisabled为可选参数，“0”表示今日之前不可选，“1”标志今日之前可选
+            	});
+            })
+
+            function inTicket() {
+                var departurePlace = document.getElementById("departurePlace").value;
+                var arrivalPlace = document.getElementById("arrivalPlace").value;
+                var data = document.getElementById("data").value;
+                if(departurePlace != ""||arrivalPlace != ""||data != ""){
+                	if(departurePlace !=""){
+                		if(arrivalPlace !=""){
+                			if(data!=""){
+								$.ajax({
+									type: "post",
+									url: "../index/getRouteNum",
+									cache: true,
+									datatype: "json",
+									data:{
+										departurePlace:departurePlace,
+										arrivalPlace:arrivalPlace,
+										data:data
+									},
+									success: function (data) {
+										if(data == 0){
+											alert("查询的车票信息不存在");
+										}else {
+											window.location.href = '../index/selectTicket';
+										}
+									},
+									error: function () {
+									}
+								});
+							}else {
+                				alert("请选择出发日期");
+							}
+						}else {
+                			alert("请输入到达地");
+						}
+					}else {
+                		alert("请输入出发地");
+					}
+				}else {
+                	alert("请输入出发地、到达地，选择出发日期");
+
+				}
+            }
+            
+            function inticket(odj) {
+				var departurePlace = $(odj).attr("departurePlace");
+				var arrivalPlace = $(odj).attr("arrivalPlace");
+				var d = new Date();
+				var data = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+				$.ajax({
+					type: "post",
+					url: "../index/getRouteNum",
+					cache: true,
+					datatype: "json",
+					data:{
+						departurePlace:departurePlace,
+						arrivalPlace:arrivalPlace,
+						data:data
+					},
+					success: function (data) {
+						if(data == 0){
+							alert("查询的车票信息不存在");
+						}else {
+							window.location.href = '../index/selectTicket';
+						}
+					},
+					error: function () {
+					}
+				});
+			}
+
+			function inUserInfo(){
+				var username = [[${session.username}]];
+				if (username == null){
+					window.location.href = "../index/inLogin";
+				}else{
+					window.location.href = "../user/inUserInfo";
+				}
+			}
+
+            function inProblem(){
+                var username = [[${session.username}]];
+                if (username == null){
+                    window.location.href = "../index/inLogin";
+                }else{
+                    window.location.href = "../index/inProblem";
+                }
+            }
+
+			function inMoreNotice(){
+				var username = [[${session.username}]];
+				if (username == null){
+					window.location.href = "../index/inLogin";
+				}else{
+					window.location.href = "inMoreNotice";
+				}
+			}
+
+			function inNotice(odj){
+				var username = [[${session.username}]];
+				if (username == null){
+					$.ajax({
+						type: "post",
+						cache: true,
+						datatype: "json",
+						success: function (data) {
+							window.location.href = "../index/inLogin";
+						},
+						error: function () {
+						}
+					});
+
+				}else{
+					var title = $(odj).attr("title");
+					$.ajax({
+						type: "post",
+						url: "../index/getTitle",
+						cache: true,
+						datatype: "json",
+						data:{
+							title:title
+						},
+						success: function (data) {
+							window.location.href = "../index/inNotice";
+						},
+						error: function () {
+						}
+					});
+				}
+			}
+
+        </script>
+
+		<style type="text/css">
+			.w {
+				/*版心*/
+				width: 1200px;
+				margin: auto;
+			}
+
+			input {
+				width: 217px;
+				height: 28px;
+				padding: 0 6px;
+				border-color: #BBB #DDD #DDD #BBB;
+				box-shadow: 1px 1px 1px #DDD inset;
+				line-height: 28px;
+				/* padding: 5px 5px; */
+				border: 1px solid #ccc;
+				font-size: 12px;
+				outline: medium none;
+				font-size: 12px;
+				outline: none;
+
+			}
+
+			.huan {
+				border-radius: 15px;
+				width: 28px;
+				height: 28px;
+				background: url(../images/h.png);
+				border: 1px solid #ccc;
+				box-shadow: 0px 0px 0px #fff inset;
+			}
+
+			.huan:hover {
+				box-shadow: 1px 1px 1px #DDD inset;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+
+			a,
+			img {
+				border: 0;
+			}
+
+			body {
+				font: 12px/180% Arial, Helvetica, sans-serif, "Microsoft YaHei";
+			}
+
+			.iptgroup {
+				float: left;
+				/* width: 620px; */
+				/*height: 90px;*/
+				margin: 0 auto 0 80px;
+				left: 60px;
+			}
+
+			.iptgroup li {
+				float: left;
+				height: 30px;
+				line-height: 30px;
+				padding: 5px;
+			}
+
+			.iptgroup li .ipticon {
+				background: url(../images/date_icon.gif) 98% 50% no-repeat;
+				border: 1px #CFCFCF solid;
+				padding: 3px;
+			}
+
+			.nav {
+				height: 50px;
+				font: bold 0/50px Arial;
+				text-align: center;
+				margin: 40px auto 0;
+				width: auto;
+			}
+
+			*{margin:0;padding:0;list-style-type:none;}
+
+			.nav a {
+				display: inline-block;
+				-webkit-transition: all 0.2s ease-in;
+				-moz-transition: all 0.2s ease-in;
+				-o-transition: all 0.2s ease-in;
+				-ms-transition: all 0.2s ease-in;
+				transition: all 0.2s ease-in;
+			}
+
+			.nav a:hover {
+				-webkit-transform: rotate(10deg);
+				-moz-transform: rotate(10deg);
+				-o-transform: rotate(10deg);
+				-ms-transform: rotate(10deg);
+				transform: rotate(10deg);
+			}
+
+			.green {
+				background: #9cd564;
+				box-shadow: 0 7px 0 #86b65b;
+			}
+
+			.nav li {
+				position: relative;
+				display: inline-block;
+				padding: 0 16px;
+				font-size: 13px;
+				text-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+				list-style: none outside none;
+			}
+
+			.nav li::before,
+			.nav li::after {
+				content: "";
+				position: absolute;
+				top: 14px;
+				height: 25px;
+				width: 1px;
+			}
+
+			.nav li::after {
+				right: 0;
+				background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+				background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+				background: -o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+				background: -ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+				background: linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+			}
+
+			.green li::before {
+				left: 0;
+				background: -moz-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+				background: -webkit-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+				background: -o-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+				background: -ms-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+				background: linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+			}
+
+			.nav li:first-child::before {
+				background: none;
+			}
+
+			.nav li:last-child::after {
+				background: none;
+			}
+
+			.nav a,
+			.nav a:hover {
+				color: #fff;
+				text-decoration: none;
+			}
+
+			.login {
+				margin-top: 15px;
+				color: #222222;
+				font-size: 15px;
+				float: right;
+			}
+
+			.header {
+				height: 5px;
+				width: 1290px;
+				/*background-color: #f5f5f5;*/
+			}
+
+			.title {
+				display: block;
+				margin-top: 15px;
+				margin-left: 100px;
+				float: left;
+			}
+
+			.chaxun {
+				margin-left: 100px;
+                width: auto;
+			}
+
+            .pc-footer-lin p {
+                text-align: center;
+                padding-top: 20px;
+                font-size: 12px;
+            }
+
+            .center {
+                width: 1200px;
+                margin: 0 auto;
+                position: relative;
+            }
+            .ticket {
+                width: 140px;
+                height: 50px;
+				display:inline;
+                background-color: #f5f5f5;
+                float: left;
+                margin-left: 10px;
+                margin-top: 10px;
+                text-align: center;
+            }
+			.ticket a{
+				display:block;
+				margin-top:6px;
+				display: block;
+				width: 140px;
+				height: 50px;
+				cursor:pointer;
+			}
+			.ticket a:hover{
+				color: #666;
+			}
+
+		</style>
+
+	</head>
+	<body>
+<!--        头部-->
+		<div class="header">
+			<ul>
+				<h2 class="title">吉林省长途汽车购票系统</h2>
+				<div th:if="${session.username == null}">
+					<li ><a href="../index/inRegister" class="login">注册</a></li>
+					<li class="login">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</li>
+					<li><a href="../index/inLogin" class="login">登入</a></li>
+				</div>
+				<li th:if="${session.username != null}"><span th:text="${session.username}" class="login"></span></li>
+			</ul>
+		</div>
+<!--        导航栏-->
+		<section class="demo">
+			<ul class="nav green">
+				<li><a href="../index/inIndex">首页</a></li>
+<!--				<li><a href="">About Me</a></li>-->
+<!--				<li><a href="">Portfolio</a></li>-->
+				<li><a style="cursor: pointer" onclick="inMoreNotice()">公告</a></li>
+				<li><a style="cursor: pointer" onclick="inProblem()">常见问题</a></li>
+				<li><a style="cursor: pointer" onclick="inUserInfo()">个人中心</a></li>
+			</ul>
+		</section>
+<!--        轮播图-->
+		<div class="banner-content">
+			<div class="banner-slide">
+				<div class="banner-slide-circle hd">
+					<ul>
+						<li class="on"></li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</div>
+				<div class="banner-slide-image bd">
+					<ul>
+						<li>
+							<a href="#">
+								<img src="../images/banner1.jpg" alt="">
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<img src="../images/banner2.jpg" alt="">
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<img src="../images/banner3.jpg" alt="">
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<img src="../images/banner4.png" alt="">
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="banner-hidden">
+				<div class="banner-background-01"></div>
+				<div class="banner-background-02"></div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			jQuery(".banner-slide").slide({
+				mainCell: ".bd ul",
+				autoPlay: true,
+				delayTime: 2000
+			});
+		</script>
+
+<!--        车票查询-->
+    <p> </p>
+		<div class="chaxun">
+			<div style="width: 90%;margin: 0 5%;">
+				<ul class="iptgroup">
+					<li >出发地：</li>
+					<li ><input type="text" name="departurePlace" id="departurePlace"/></li>
+					<li ><input type="button" onClick="change()"  class="huan" value=""/></td></li>
+					<li >到达地：</li>
+					<li ><input type="text" name="arrivalPlace" id="arrivalPlace"/></li>
+					<li>出发时间：</li>
+					<li><input type="text" readonly="readonly" class="doubledate ipticon" id="data"/></li>
+					<li><input type="button" value="查询" style="background-color: #9cd564;width:60px;cursor:pointer;" onclick="inTicket()"></li>
+				</ul>
+			</div>
+		</div>
+
+<!--		公告-->
+<div class="news-content">
+    <div class="news-content-item">
+        <a class="news-content-title clearfix" href="javascript:;" style="cursor: auto">
+            <div class="news-title-fl">
+                <div class="news-title-color"></div>
+                <div class="news-title-title">最新公告</div>
+            </div>
+            <div class="news-title-fr news-title-img01"></div>
+        </a>
+        <ul class="news-content-lists clearfix">
+            <tr th:each="notice:${list1}">
+            <li class="clearfix">
+                <a href="" th:title="${notice.title}" onclick="inNotice(this)">
+                    <i>【<td th:text="${notice.date}"></td>】</i>
+                    <span><td th:text="${notice.title}"></td></span>
+                </a>
+            </li>
+            </tr>
+        </ul>
+    </div>
+</div>
+<!--        热门车票-->
+<div class="news-content1">
+    <div class="news-content-item">
+        <a class="news-content-title clearfix" href="javascript:;" style="cursor: auto">
+            <div class="news-title-fl">
+                <div class="news-title-color"></div>
+                <div class="news-title-title">热门车票</div>
+            </div>
+        </a><br><br>
+        <div style="margin-left: 60px;float: left;height: auto;width: auto">
+            <ul>
+                <tr th:each="route:${list2}">
+                <li  class="ticket"><a href="" th:departurePlace="${route.departurePlace}" th:arrivalPlace="${route.arrivalPlace}" onclick="inticket(this)">
+                    <span><td th:text="${route.departurePlace}"></td></span>
+                    <span><img src="../images/small_bus.png"></span>
+                    <span><td th:text="${route.arrivalPlace}"></td></span><br>
+                    <span style="color: #f65b25;font-size:15px">&yen;</span>
+                    <span style="color: #f65b25;font-size:15px"><td th:text="${route.minPrice}"></td></span>
+                    <span>起</span>
+                </a> </li>
+                </tr>
+            </ul>
+        </div>
+    </div>
+</div><br>
+
+<!--尾部-->
+<footer>
+    <div class="pc-footer-lin" style="margin-top: 290px;height: auto;width: auto;background-color: #e9e9e9">
+        <div class="center">
+            <p>
+<!--                友情链接：-->
+<!--                <a href="" target="_blank"></a>-->
+            </p>
+            <p style="padding-bottom:30px;text-align: center">Copyright©2020-2020 吉林省长途汽车购票系统 版权所有</p>
+        </div>
+    </div>
+    </div>
+</footer>
+	</body>
+</html>

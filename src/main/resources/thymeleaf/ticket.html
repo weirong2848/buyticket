@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>车票信息页</title>
+    <link href="../css/doubleDate.css" rel="stylesheet" type="text/css" />
+    <link href="../css/ticket.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
+<!--    <script type="text/javascript" src="../js/doubleDate2.0.js"></script>-->
+
+    <script type="text/javascript" th:inline="javascript">
+
+        window.onload = function () {
+            var d = new Date();
+            var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+            document.getElementById("data1").innerText = addDate(str,0);
+            document.getElementById("xinqi1").innerText = getWeek(str,0);
+            document.getElementById("data2").innerText = addDate(str,1);
+            document.getElementById("xinqi2").innerText = getWeek(str,1);
+            document.getElementById("data3").innerText = addDate(str,2);
+            document.getElementById("xinqi3").innerText = getWeek(str,2);
+            document.getElementById("data4").innerText = addDate(str,3);
+            document.getElementById("xinqi4").innerText = getWeek(str,3);
+            document.getElementById("data5").innerText = addDate(str,4);
+            document.getElementById("xinqi5").innerText = getWeek(str,4);
+        }
+        function addDate(date, num) {
+            //可以加上错误处理
+            var odate = new Date(date);
+            odate = odate.valueOf();
+            odate = odate + num * 24 * 60 * 60 * 1000;
+            odate = new Date(odate);
+            var mouth= (odate.getMonth() + 1);
+            mouth = mouth < 10 ?"0"+ mouth : mouth;
+            var data =  odate.getDate();
+            data = data <10 ?"0" + data : data;
+            return(odate.getFullYear() + "-" + mouth + "-" + data);
+        }
+        function getWeek(date, num) {
+            //可以加上错误处理
+            var arr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+            var odate = new Date(date);
+            odate = odate.valueOf();
+            odate = odate + num * 24 * 60 * 60 * 1000;
+            odate = new Date(odate);
+            return arr[odate.getDay()];
+        }
+        function change() {
+            var departurePlace = document.getElementById("departurePlace").value;
+            var arrivalPlace = document.getElementById("arrivalPlace").value; {
+                document.getElementById("arrivalPlace").value = departurePlace;
+                document.getElementById("departurePlace").value = arrivalPlace;
+            }
+        }
+
+        $(function() {
+            $('.doubledate').kuiDate({
+                className: 'doubledate',
+                isDisabled: "0" // isDisabled为可选参数，“0”表示今日之前不可选，“1”标志今日之前可选
+            });
+        })
+
+        function inTicket() {
+            var departurePlace = document.getElementById("departurePlace").value;
+            var arrivalPlace = document.getElementById("arrivalPlace").value;
+            var data = document.getElementById("data").value;
+
+            if(departurePlace != ""||arrivalPlace != ""||data != ""){
+                if(departurePlace !=""){
+                    if(arrivalPlace !=""){
+                        if(data!=""){
+                            $.ajax({
+                                type: "post",
+                                url: "getRouteNum",
+                                cache: true,
+                                datatype: "json",
+                                data:{
+                                    departurePlace:departurePlace,
+                                    arrivalPlace:arrivalPlace,
+                                    data:data
+                                },
+                                success: function (data) {
+                                    if(data == 0){
+                                        alert("查询的车票信息不存在");
+                                    }else {
+                                        window.location.href = 'selectTicket';
+                                    }
+                                },
+                                error: function () {
+                                }
+                            });
+                        }else {
+                            alert("出发日期为空");
+                        }
+                    }else {
+                        alert("请输入到达地");
+                    }
+                }else {
+                    alert("请输入出发地");
+                }
+            }else {
+                alert("请输入出发地、到达地、出发日期");
+            }
+        }
+        function inProblem(){
+            var username = [[${session.username}]];
+            if (username == null){
+                window.location.href = "../index/inLogin1";
+            }else{
+                window.location.href = "../index/inProblem";
+            }
+        }
+
+        function inMoreNotice(){
+            var username = [[${session.username}]];
+            if (username == null){
+                window.location.href = "../index/inLogin1";
+            }else{
+                window.location.href = "inMoreNotice";
+            }
+        }
+
+        function inticket(getid) {
+            var departurePlace = document.getElementById("departurePlace").value;
+            var arrivalPlace = document.getElementById("arrivalPlace").value;
+            var data = document.getElementById(getid.id).innerText;
+            data = data.substring(0,10);
+            var riqi = data;
+            if(departurePlace != ""||arrivalPlace != ""){
+                if(departurePlace !=""){
+                    if(arrivalPlace !=""){
+                        $.ajax({
+                            type: "post",
+                            url: "../index/getRouteNum",
+                            cache: true,
+                            datatype: "json",
+                            data:{
+                                departurePlace:departurePlace,
+                                arrivalPlace:arrivalPlace,
+                                data:data
+                            },
+                            success: function (data) {
+                                if(data == 0){
+                                    alert("查询的车票信息不存在");
+                                }else {
+                                    window.location.href = '../index/selectTicket';
+                                }
+                            },
+                            error: function () {
+                            }
+                        });
+                    }else {
+                        alert("请输入到达地");
+                    }
+                }else {
+                    alert("请输入出发地");
+                }
+            }else {
+                alert("请输入出发地、到达地");
+
+            }
+        }
+
+        function getFlightNumber(obj) {
+            var flightNumber = $(obj).attr("flightNumber");
+            var state = $(obj).attr("state");
+            var ticketNumber = $(obj).attr("ticketNumber");
+            var time = $(obj).attr("time");
+            var data = document.getElementById("data").value;
+            var username = [[${session.username}]];
+            if (username == null){
+                window.location.href = "../index/inLogin1";
+            }else{
+                if(ticketNumber>0){
+                    if(state=="-"){
+                        $.ajax({
+                            type: "post",
+                            url: "getReady",
+                            cache: true,
+                            datatype: "json",
+                            data:{
+                                flightNumber:flightNumber,
+                                data:data
+                            },
+                            success: function (data) {
+                                if(data == 0){
+                                    alert("查询的车票信息不存在");
+                                }else {
+                                    window.location.href = 'getReadyPay';
+                                }
+                            },
+                            error: function () {
+                            }
+                        });
+                    }else {
+                        alert(state);
+                    }
+                }else {
+                    alert("所购买的"+data+" "+time+"的票已经没有了")
+                }
+            }
+        }
+
+        function inUserInfo(){
+            var username = [[${session.username}]];
+            if (username == null){
+                window.location.href = "../index/inLogin1";
+            }else{
+                window.location.href = "../user/inUserInfo";
+            }
+        }
+
+    </script>
+
+    <style type="text/css">
+        .w {
+            /*版心*/
+            width: 1200px;
+            margin: auto;
+        }
+
+        input {
+            width: 217px;
+            height: 28px;
+            padding: 0 6px;
+            border-color: #BBB #DDD #DDD #BBB;
+            box-shadow: 1px 1px 1px #DDD inset;
+            line-height: 28px;
+            /* padding: 5px 5px; */
+            border: 1px solid #ccc;
+            font-size: 12px;
+            outline: medium none;
+            font-size: 12px;
+            outline: none;
+
+        }
+
+        .huan {
+            border-radius: 15px;
+            width: 28px;
+            height: 28px;
+            background: url(../images/h.png);
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 0px #fff inset;
+        }
+
+        .huan:hover {
+            box-shadow: 1px 1px 1px #DDD inset;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        a,
+        img {
+            border: 0;
+        }
+
+        body {
+            font: 12px/180% Arial, Helvetica, sans-serif, "Microsoft YaHei";
+        }
+
+        .iptgroup {
+            float: left;
+            /* width: 620px; */
+            /*height: 90px;*/
+            margin: 0 auto 0 80px;
+            left: 60px;
+        }
+
+        .iptgroup li {
+            float: left;
+            height: 30px;
+            line-height: 30px;
+            padding: 5px;
+        }
+
+        .iptgroup li .ipticon {
+            /*background: url(../images/date_icon.gif) 98% 50% no-repeat;*/
+            border: 1px #CFCFCF solid;
+            padding: 3px;
+        }
+
+        .nav {
+            height: 50px;
+            font: bold 0/50px Arial;
+            text-align: center;
+            margin: 40px auto 0;
+        }
+
+        .nav a {
+            display: inline-block;
+            -webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            -o-transition: all 0.2s ease-in;
+            -ms-transition: all 0.2s ease-in;
+            transition: all 0.2s ease-in;
+        }
+
+        .nav a:hover {
+            -webkit-transform: rotate(10deg);
+            -moz-transform: rotate(10deg);
+            -o-transform: rotate(10deg);
+            -ms-transform: rotate(10deg);
+            transform: rotate(10deg);
+        }
+
+        .green {
+            background: #9cd564;
+            box-shadow: 0 7px 0 #86b65b;
+        }
+
+        .nav li {
+            position: relative;
+            display: inline-block;
+            padding: 0 16px;
+            font-size: 13px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+            list-style: none outside none;
+        }
+
+        .nav li::before,
+        .nav li::after {
+            content: "";
+            position: absolute;
+            top: 14px;
+            height: 25px;
+            width: 1px;
+        }
+
+        .nav li::after {
+            right: 0;
+            background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+        }
+
+        .green li::before {
+            left: 0;
+            background: -moz-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -webkit-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -o-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -ms-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+        }
+
+        .nav li:first-child::before {
+            background: none;
+        }
+
+        .nav li:last-child::after {
+            background: none;
+        }
+
+        .nav a,
+        .nav a:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .login {
+            text-decoration: none;
+            margin-top: 15px;
+            color: #222222;
+            font-size: 15px;
+            float: right;
+        }
+
+        .header {
+            height: 5px;
+            width: 1290px;
+        }
+
+        .title {
+            display: block;
+            margin-top: 15px;
+            margin-left: 100px;
+            float: left;
+        }
+
+        .chaxun {
+            margin-top: 20px;
+            /*margin-left: 100px;*/
+            width: auto;
+        }
+
+        .ticket{
+            margin-left: 100px;
+            margin-top: 80px;
+        }
+        
+        .pc-footer-lin p {
+            text-align: center;
+            padding-top: 20px;
+            font-size: 12px;
+        }
+
+
+    </style>
+</head>
+<!--        头部-->
+<div class="header">
+    <ul>
+        <h2 class="title">吉林省长途汽车购票系统</h2>
+        <div th:if="${session.username == null}">
+            <li ><a href="../register.html" class="login">注册</a></li>
+            <li class="login">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</li>
+            <li><a href="../login.html" class="login">登入</a></li>
+        </div>
+        <li th:if="${session.username != null}"><span th:text="${session.username}" class="login" id="username"></span></li>
+    </ul>
+</div>
+<!--        导航栏-->
+<section class="demo">
+    <ul class="nav green">
+        <li><a href="../index/inIndex">首页</a></li>
+        <!--				<li><a href="">About Me</a></li>-->
+        <!--				<li><a href="">Portfolio</a></li>-->
+        <li><a style="cursor: pointer" onclick="inMoreNotice()">公告</a></li>
+        <li><a style="cursor: pointer" onclick="inProblem()">常见问题</a></li>
+        <li><a style="cursor: pointer" onclick="inUserInfo()">个人中心</a></li>
+    </ul>
+</section>
+<!--        车票查询-->
+<div class="chaxun">
+    <div style="width: 90%;margin: 0 5%;">
+        <ul class="iptgroup">
+            <li >出发地：</li>
+            <li ><input type="text" name="departurePlace" id="departurePlace" th:value="${route.departurePlace}" /></li>
+            <li ><input type="button" onClick="change()"  class="huan" value=""/></td></li>
+            <li >到达地：</li>
+            <li ><input type="text" name="arrivalPlace" id="arrivalPlace" th:value="${route.arrivalPlace}" /></li>
+            <li>出发时间：</li>
+            <li><input type="text" readonly="readonly" id="data" th:value="${data}"/></li>
+            <li><input type="button" value="查询" style="background-color: #9cd564;width:60px;cursor:pointer;" onclick="inTicket()"></li>
+        </ul>
+    </div>
+</div>
+<div class="PublicDownWhole w">
+    <div class="InquireSelectTable">
+        <div class="riqi">
+            <li><a href="" onclick="inticket(this)" id="1"><span id="data1"></span><br><span id="xinqi1"></span></a></li>
+            <li><a href="" onclick="inticket(this)" id="2"><span id="data2"></span><br><span id="xinqi2"></span></a></li>
+            <li><a href="" onclick="inticket(this)" id="3"><span id="data3"></span><br><span id="xinqi3"></span></a></li>
+            <li><a href="" onclick="inticket(this)" id="4"><span id="data4"></span><br><span id="xinqi4"></span></a></li>
+            <li><a href="" onclick="inticket(this)" id="5"><span id="data5"></span><br><span id="xinqi5"></span></a></li>
+        </div>
+        <table class="PublicTableCss">
+            <thead>
+            <tr style="color: #FFFFFF;font-size: 14px;">
+                <td>班次号</td>
+                <td>发车时间</td>
+                <td>出发站-到达站</td>
+                <td>车型</td>
+                <td>历时</td>
+                <td>余票</td>
+                <td>状态</td>
+                <td>里程</td>
+                <td>价格</td>
+                <td>操作</td>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr th:each="ticket:${pageInfo.list}">
+                <td th:text="${ticket.flightNumber}"></td>
+                <td th:text="${ticket.time}"></td>
+                <td th:text="${ticket.departureStation}+'-'+${ticket.arrivalStation}"></td>
+                <td th:text="${ticket.vehicleType}"></td>
+                <td th:text="${ticket.duration}"></td>
+                <td th:text="${ticket.ticketNumber}"></td>
+                <td th:text="${ticket.state}"></td>
+                <td th:text="${ticket.mileage}"></td>
+                <td style="color: red" th:text="${ticket.price}"></td>
+                <td>
+                    <div class="PublicTableBtnIcon Color3Btn Js_edit1" th:flightNumber="${ticket.flightNumber}" th:state="${ticket.state}" th:ticketNumber="${ticket.ticketNumber}" th:time="${ticket.time}" onclick="getFlightNumber(this)">
+                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                        <span >购票</span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--分页-->
+    <div class="PageNumber">
+        <div class="NumbersBox">
+            <a th:href="@{'selectTicket?pageNo='+${pageInfo.firstPage}}" class="LeftArrow">首页</a>
+            <th:block th:if="${pageInfo.hasPreviousPage}">
+                <a th:href="@{'selectTicket?pageNo='+${pageInfo.prePage}}" class="LeftArrow">上一页</a>
+            </th:block>
+            <ul>
+                <tr th:each="nav : ${pageInfo.navigatepageNums}">
+                    <li><a th:href="@{'selectTicket?pageNo='+${nav}}" th:text="${nav}"></a></li>
+                </tr>
+            </ul>
+            <a th:href="@{'selectTicket?pageNo='+${pageInfo.lastPage}}" class="RightArrow ">尾页</a>
+            <th:block th:if="${pageInfo.hasNextPage}">
+                <a th:href="@{'selectTicket?pageNo='+${pageInfo.nextPage}}" class="RightArrow "> 下一页</a>
+            </th:block>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="pc-footer-lin" style="margin-top: 90px;height: auto;width: auto;background-color: #e9e9e9">
+        <div class="center">
+            <p>
+                <!--                友情链接：-->
+                <!--                <a href="" target="_blank"></a>-->
+            </p>
+            <p style="padding-bottom:30px">Copyright©2020-2020 吉林省长途汽车购票系统 版权所有</p>
+        </div>
+    </div>
+    </div>
+</footer>
+</body>
+</html>

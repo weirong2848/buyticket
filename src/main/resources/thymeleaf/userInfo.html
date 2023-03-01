@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息页</title>
+    <link href="../css/ticket.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="../css/yhxx.css"/>
+    <link href="../css/userInfo.css" rel="stylesheet"/>
+    <link href="../css/cartstyle.css" rel="stylesheet"/>
+    <link href="../css/optstyle.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/person.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/pay2.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            var region = $("#region");
+            var number_this = $("#number_this");
+            var name = $("#name_");
+            var phone = $("#phone");
+            $("#sub_setID").click(function () {
+                var input_out = $(".input_style");
+                for (var i = 0; i <= input_out.length; i++) {
+                    if ($(input_out[i]).val() == "") {
+                        $(input_out[i]).css("border", "1px solid red");
+
+                        return false;
+                    } else {
+                        $(input_out[i]).css("border", "1px solid #cccccc");
+                    }
+                }
+            });
+            var span_momey = $(".span_momey");
+            var b = 0;
+            for (var i = 0; i < span_momey.length; i++) {
+                b += parseFloat($(span_momey[i]).html());
+            }
+            var out_momey = $(".out_momey");
+            out_momey.html(b);
+            $(".shade_content").hide();
+            $(".shade").hide();
+            $('.nav_mini ul li').hover(function () {
+                $(this).find('.two_nav').show(100);
+            }, function () {
+                $(this).find('.two_nav').hide(100);
+            })
+            $('.left_nav').hover(function () {
+                $(this).find('.nav_mini').show(100);
+            }, function () {
+                $(this).find('.nav_mini').hide(100);
+            })
+            $('#jia').click(function () {
+                $('input[name=num]').val(parseInt($('input[name=num]').val()) + 1);
+            })
+            $('#jian').click(function () {
+                $('input[name=num]').val(parseInt($('input[name=num]').val()) - 1);
+            })
+            $('.Caddress .add_mi').click(function () {
+                $(this).css('background', 'url("../images/mail_1.jpg") no-repeat').siblings('.add_mi').css('background',
+                    'url("../images/mail.jpg") no-repeat')
+            })
+        })
+        var x = Array();
+
+        function func(a, b) {
+            x[b] = a.html();
+            alert(x)
+            a.css('border', '2px solid #f00').siblings('.min_mx').css('border', '2px solid #ccc');
+        }
+
+        function onclick_close() {
+            var shade_content = $(".shade_content");
+            var shade = $(".shade");
+            shade_content.hide();
+            shade.hide();
+            // if (confirm("确认关闭么！此操作不可恢复")) {
+            //
+            // }
+        }
+
+        function onclick_open() {
+            $(".shade_content").show();
+            $(".shade").show();
+            var input_out = $(".input_style");
+            for (var i = 0; i <= input_out.length; i++) {
+                if ($(input_out[i]).val() != "") {
+                    $(input_out[i]).val("");
+                }
+            }
+        }
+
+        function IdCodeValid(code) {
+            //身份证号合法性验证
+            //支持15位和18位身份证号
+            //支持地址编码、出生日期、校验位验证
+            var city = {
+                11: "北京",
+                12: "天津",
+                13: "河北",
+                14: "山西",
+                15: "内蒙古",
+                21: "辽宁",
+                22: "吉林",
+                23: "黑龙江 ",
+                31: "上海",
+                32: "江苏",
+                33: "浙江",
+                34: "安徽",
+                35: "福建",
+                36: "江西",
+                37: "山东",
+                41: "河南",
+                42: "湖北 ",
+                43: "湖南",
+                44: "广东",
+                45: "广西",
+                46: "海南",
+                50: "重庆",
+                51: "四川",
+                52: "贵州",
+                53: "云南",
+                54: "西藏 ",
+                61: "陕西",
+                62: "甘肃",
+                63: "青海",
+                64: "宁夏",
+                65: "新疆",
+                71: "台湾",
+                81: "香港",
+                82: "澳门",
+                91: "国外 "
+            };
+            var row = "验证成功";
+            if (!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(code)) {
+                row = "身份证号格式错误";
+            } else if (!city[code.substr(0, 2)]) {
+                row = "身份证号地址编码错误";
+            } else {
+                //18位身份证需要验证最后一位校验位
+                if (code.length == 18) {
+                    code = code.split('');
+                    //∑(ai×Wi)(mod 11)
+                    //加权因子
+                    var factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+                    //校验位
+                    var parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2];
+                    var sum = 0;
+                    var ai = 0;
+                    var wi = 0;
+                    for (var i = 0; i < 17; i++) {
+                        ai = code[i];
+                        wi = factor[i];
+                        sum += ai * wi;
+                    }
+                    if (parity[sum % 11] != code[17].toUpperCase()) {
+                        row = "身份证号校验位错误";
+                    }
+                }
+            }
+            return row;
+        }
+
+        function delOrder(obj) {
+            var msg = "确定要删除吗？";
+            orderid = $(obj).attr("orderid");
+            if (confirm(msg) == true) {
+                $.ajax({
+                    type: "post",
+                    url: "../user/delOrder",
+                    cache: true,
+                    datatype: "json",
+                    data: {
+                        orderid: orderid,
+                    },
+                    success: function (data) {
+                        window.location.href = '../user/inUserInfo';
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        }
+
+        function updatePassword() {
+            var password = document.getElementById("password").value;
+            var newpassword1 = document.getElementById("newpassword1").value;
+            var newpassword2 = document.getElementById("newpassword2").value;
+            var username = document.getElementById("username").innerText;
+            if (password != "" && newpassword1 != "" && newpassword1 != "") {
+                if (password == [[${user.password}]]) {
+                    if (newpassword1 == newpassword2) {
+                        if (newpassword1 == [[${user.password}]]) {
+                            alert("你要修改的密码和原始密码一致，请更改密码重新输入")
+                        } else {
+                            $.ajax({
+                                type: "post",
+                                url: "../user/updatePassword",
+                                cache: true,
+                                datatype: "json",
+                                data: {
+                                    username: username,
+                                    password: newpassword1
+                                },
+                                success: function (data) {
+                                    alert("修改成功");
+                                    window.location.href = '../user/inUserInfo';
+                                },
+                                error: function () {
+                                }
+                            });
+                        }
+                    } else {
+                        alert("两次输入密码不一致");
+                    }
+                } else {
+                    alert("输入的原始密码不正确");
+                }
+
+            } else {
+                alert("输入不能有空");
+            }
+        }
+
+        function paymonay(obj) {
+            time = $(obj).attr("time");
+            time = time.replace(/-/g,"/");//替换字符，变成标准格式
+            var date2=new Date();//取今天的日期
+            var date1 = new Date(Date.parse(time));
+            if(date1>date2){
+                orderid = $(obj).attr("orderid");
+                money = $(obj).attr("money");
+                $.ajax({
+                    type: "post",
+                    url: "../pay/paymoney",
+                    cache: true,
+                    datatype: "json",
+                    data: {
+                        orderid: orderid,
+                        money: money
+                    },
+                    success: function (result) {
+                        window.location.href = "../pay/inAlipay";
+                    },
+                    error: function () {
+                    }
+                });
+            }else {
+                alert("超过支付时间不能支付");
+            }
+        }
+
+        function refund(obj) {
+            time = $(obj).attr("time");
+            time = time.replace(/-/g,"/");//替换字符，变成标准格式
+            var date2=new Date();//取今天的日期
+            var date1 = new Date(Date.parse(time));
+            if(date1>date2){
+                var msg = "确定要退票吗？退票后您将少获得实付金额的15%";
+                orderid = $(obj).attr("orderid");
+                money = $(obj).attr("money");
+                if (confirm(msg) == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "../pay/refund",
+                        cache: true,
+                        datatype: "json",
+                        data: {
+                            orderid: orderid,
+                            money: money
+                        },
+                        success: function (date) {
+                            alert("退款成功,请登入支付宝查看");
+                            window.location.href = "../pay/inUserInfo";
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            }else {
+                alert("以超过退票时间，不能退票!");
+            }
+        }
+
+        function delBuyUser(obj) {
+            idnumber = $(obj).attr("idnumber");
+            $.ajax({
+                type: "post",
+                url: "../user/delBuyUser",
+                cache: true,
+                datatype: "json",
+                data: {
+                    idnumber: idnumber
+                },
+                success: function (date) {
+                    window.location.href = "../user/inUserInfo";
+                },
+                error: function () {
+                }
+            });
+        }
+
+        function insertBuyUser() {
+            var username = document.getElementById("username").innerText;
+            var idnumber = document.getElementById("idnumber").value;
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var regPhone = /^[1][3,4,5,7,8][0-9]{9}$/;
+            var regName = /^[\u4e00-\u9fa5]{2,4}$/;
+            if (idnumber != "" && name != "" && phone != "") {
+                if (IdCodeValid(idnumber) == "验证成功") {
+                    if (regName.test(name) == true) {
+                        if (regPhone.test(phone) == true) {
+                            $.ajax({
+                                type: "post",
+                                url: "../user/istBuyUser",
+                                cache: true,
+                                datatype: "json",
+                                data: {
+                                    username: username,
+                                    idnumber: idnumber,
+                                },
+                                success: function (data) {
+                                    if (data == "0") {
+                                        $.ajax({
+                                            type: "post",
+                                            url: "../user/insertBuyUser",
+                                            cache: true,
+                                            datatype: "json",
+                                            data: {
+                                                username: username,
+                                                idnumber: idnumber,
+                                                name: name,
+                                                phone: phone,
+                                            },
+                                            success: function (data) {
+                                                alert("添加成功");
+                                                window.location.href = "../user/inUserInfo";
+                                            },
+                                            error: function () {
+                                            }
+                                        });
+                                    } else {
+                                        alert("添加的乘车人信息已存在")
+                                    }
+                                },
+                                error: function () {
+                                }
+                            });
+                        } else {
+                            alert("手机号输入错误");
+                        }
+                    } else {
+                        alert("姓名输入错误");
+                    }
+                } else {
+                    alert(IdCodeValid(idnumber));
+                }
+            } else {
+                alert("输入的内容不能为空");
+            }
+        }
+
+        function updBuyUser(){
+
+        }
+
+        $(function () {
+            //左侧菜单
+            var h = 0;
+            $('.menu-item-1 .sub-title').click(function () {
+                $(this).parent().toggleClass('active collapse');
+                $('.menu-item-1').each(function () {
+                    h += $(this).height();
+                })
+                //给菜单赋值高度
+                $('.sidebar').css({
+                    "height": h
+                });
+                h = 0;
+            })
+            //右上角鼠标悬浮触发下拉
+            $('.dropdown-toc').hover(function () {
+                $('.dropdown-body').toggle();
+            })
+            //滚动监听
+            var leg = $('.maodian').length;
+            $(window).scroll(function () {
+                $('.imgtc').hide(); //滚动后图片放大隐藏
+                var sh = $(window).scrollTop()
+                //右上悬浮
+                sh > 86 ? $('.anchor-toc').addClass('fixed') : $('.anchor-toc').removeClass('fixed');
+                //循环遍历锚点
+                for (i = 1; i <= leg; i++) {
+                    if ($("#mao" + i).offset().top - 140 <= sh) {
+                        $('.maodian').removeClass('active');
+                        $('#mao' + i).addClass("active");
+                        $('.toc-current').text($('#mao' + i).parent().text());
+                        $('.dropdown-body ul li').removeClass('active').eq(i - 1).addClass('active');
+                    }
+
+                }
+                sh < 140 ? $('.toc-current').text("本页导航") : "";
+            })
+            //右上角点击
+            $('.dropdown-body ul li').click(function () {
+                var jt = $(this).index();
+                $(window).scrollTop($('.maodian').eq(jt).offset().top - 140);
+            })
+        })
+    </script>
+    <style>
+        .button {
+            display: inline-block;
+            zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+            *display: inline;
+            vertical-align: baseline;
+            margin: 0 2px;
+            outline: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font: 14px/100% Arial, Helvetica, sans-serif;
+            padding: .5em 2em .55em;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+            -webkit-border-radius: .5em;
+            -moz-border-radius: .5em;
+            border-radius: .5em;
+            -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+            -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+        }
+
+        .button:hover {
+            text-decoration: none;
+        }
+
+        .button:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .bigrounded {
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
+
+        .white {
+            color: #606060;
+            border: solid 1px #b7b7b7;
+            background: #fff;
+            background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+            background: -moz-linear-gradient(top, #fff, #ededed);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+        }
+
+        .white:hover {
+            background: #ededed;
+            background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+            background: -moz-linear-gradient(top, #fff, #dcdcdc);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+
+        }
+
+        .white:active {
+            color: #999;
+            background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+            background: -moz-linear-gradient(top, #ededed, #fff);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+        }
+
+        input[type="password"] {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            height: -webkit-calc(3em + 2px);
+            height: calc(3em + 2px);
+            margin: 0 0 1em;
+            padding: 1em;
+            border: 1px solid #cccccc;
+            border-radius: 1.5em;
+            background: #fff;
+            resize: none;
+            outline: none;
+        }
+
+        input[type="password"][required]:focus {
+            border-color: #9cd564;
+        }
+
+        input[type="password"][required]:focus + label[placeholder]:before {
+            color: #9cd564;
+        }
+
+        input[type="password"][required]:focus + label[placeholder]:before,
+        input[type="password"][required]:valid + label[placeholder]:before {
+            -webkit-transition-duration: .2s;
+            transition-duration: .2s;
+            -webkit-transform: translate(0, -1.5em) scale(0.9, 0.9);
+            -ms-transform: translate(0, -1.5em) scale(0.9, 0.9);
+            transform: translate(0, -1.5em) scale(0.9, 0.9);
+        }
+
+        input[type="password"][required]:invalid + label[placeholder][alt]:before {
+            content: attr(alt);
+        }
+
+        input[type="password"][required] + label[placeholder] {
+            display: block;
+            pointer-events: none;
+            line-height: 2.3em;
+            margin-top: -webkit-calc(-3em - 2px);
+            margin-top: calc(-3em - 2px);
+            margin-bottom: -webkit-calc((3em - 1em) + 2px);
+            margin-bottom: calc((3em - 1em) + 2px);
+        }
+
+        input[type="password"][required] + label[placeholder]:before {
+            content: attr(placeholder);
+            display: inline-block;
+            margin: 0 -webkit-calc(1em + 2px);
+            margin: 0 calc(1em + 2px);
+            padding: 0 2px;
+            color: #898989;
+            white-space: nowrap;
+            -webkit-transition: 0.3s ease-in-out;
+            transition: 0.3s ease-in-out;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffffff));
+            background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
+            background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+            -webkit-background-size: 100% 5px;
+            background-size: 100% 5px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .nav {
+            /*width: 560px;*/
+            height: 50px;
+            font: bold 0/50px Arial;
+            text-align: center;
+            margin: 40px auto 0;
+            border-radius: 8px;
+        }
+
+        .nav a {
+            display: inline-block;
+            -webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            -o-transition: all 0.2s ease-in;
+            -ms-transition: all 0.2s ease-in;
+            transition: all 0.2s ease-in;
+        }
+
+        .nav a:hover {
+            -webkit-transform: rotate(10deg);
+            -moz-transform: rotate(10deg);
+            -o-transform: rotate(10deg);
+            -ms-transform: rotate(10deg);
+            transform: rotate(10deg);
+        }
+
+        .green {
+            background: #9cd564;
+            box-shadow: 0 7px 0 #86b65b;
+        }
+
+        .nav li {
+            position: relative;
+            display: inline-block;
+            padding: 0 16px;
+            font-size: 13px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+            list-style: none outside none;
+        }
+
+        .nav li::before,
+        .nav li::after {
+            content: "";
+            position: absolute;
+            top: 14px;
+            height: 25px;
+            width: 1px;
+        }
+
+        .nav li::after {
+            right: 0;
+            background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: -ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+            background: linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0));
+        }
+
+        .green li::before {
+            left: 0;
+            background: -moz-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -webkit-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -o-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: -ms-linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+            background: linear-gradient(top, #9cd564, #7aa450 50%, #9cd564);
+        }
+
+        .nav li:first-child::before {
+            background: none;
+        }
+
+        .nav li:last-child::after {
+            background: none;
+        }
+
+        .nav a,
+        .nav a:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<top>
+    <section class="seck">
+        <div class="register_login">
+            <em>您好</em>
+            <span th:text="${session.username}" id="username"></span>
+        </div>
+    </section>
+</top>
+<section class="demo" style="margin-left: 310px">
+    <ul class="nav green">
+        <li><a href="../index/inIndex" class="navwh">首页</a></li>
+<!--        <li><a href="">About Me</a></li>-->
+<!--        <li><a href="">Portfolio</a></li>-->
+        <li><a href="../index/inMoreNotice">公告</a></li>
+        <li><a href="../index/inProblem">常见问题</a></li>
+        <li><a href="">个人中心</a></li>
+    </ul>
+</section>
+<div class="wrapper">
+    <div class="container">
+        <div class="sidebar-wrapper fixed">
+            <div class="sidebar dropdown-body">
+                <ul class="menu-group">
+                    <li class="menu-item menu-item-1 active">
+                        <a class=" sub-title" href="javascript:;">用户订单</a>
+                    </li>
+                    <li class="menu-item menu-item-1 collapse">
+                        <a class=" sub-title" href="javascript:;">乘车人管理</a>
+                    </li>
+                    <li class="menu-item menu-item-1 collapse">
+                        <a class=" sub-title" href="javascript:;">修改密码</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="main-container">
+            <tr class="markdown">
+                <h1>
+                    <span class="metadata"></span>
+                </h1>
+                <p></p>
+                <h2><a href="#mao1" class="maodian" id="mao1"></a> 用户订单</h2>
+                <div class="PublicDownWhole w">
+                    <div class="InquireSelectTable">
+                        <table class="PublicTableCss">
+                            <thead>
+                            <tr style="color: #FFFFFF;font-size: 14px;">
+                                <td>订单号</td>
+                                <td>下单时间</td>
+                                <td>班次号</td>
+                                <td>发车时间</td>
+                                <td>出发站-到达站</td>
+                                <td>乘车人</td>
+                                <td>座位号</td>
+                                <td>订单总额</td>
+                                <td>操作</td>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            <tr th:each="order:${list}">
+                                <td th:text="${order.orderid}"></td>
+                                <td th:text="${order.orderTime}"></td>
+                                <td th:text="${order.flightNumber}"></td>
+                                <td th:text="${order.time}"></td>
+                                <td th:text="${order.departureStation}+'-'+${order.arrivalStation}"></td>
+                                <td th:text="${order.name}"></td>
+                                <td th:text="${order.seatNumber}"></td>
+                                <td style="color: red" th:text="${order.money}"></td>
+                                <td th:if="${order.state ==0}">
+                                    <div class="PublicTableBtnIcon Color3Btn1 Js_edit1" th:orderid="${order.orderid}"
+                                         th:money="${order.money}" th:time="${order.time}" onclick="paymonay(this)">
+                                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                                        <span>去支付</span>
+                                    </div>
+                                    <div class="PublicTableBtnIcon Color3Btn Js_edit1" th:orderid="${order.orderid}"
+                                         onclick="delOrder(this)">
+                                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                                        <span>删除</span>
+                                    </div>
+                                </td>
+                                <td th:if="${order.state ==1}">
+                                    <div class="PublicTableBtnIcon Color3Btn2 Js_edit1" th:orderid="${order.orderid}"
+                                         th:money="${order.money}" th:time="${order.time}" onclick="refund(this)">
+                                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                                        <span>退票</span>
+                                    </div>
+                                    <div class="PublicTableBtnIcon Color3Btn Js_edit1" th:orderid="${order.orderid}"
+                                         onclick="delOrder(this)">
+                                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                                        <span>删除</span>
+                                    </div>
+                                </td>
+
+                                <td th:if="${order.state ==2}">
+                                    <div class="PublicTableBtnIcon Color3Btn Js_edit1" th:orderid="${order.orderid}"
+                                         onclick="delOrder(this)">
+                                        <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>
+                                        <span>删除</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="clear" style="margin-top: 100px"></div>
+                <h2><a href="#mao2" class="maodian" id="mao2"></a> 乘车人管理</h2>
+                <div class="clear"></div>
+                <div class="float-bar-wrapper">
+                    <div class="btn-area" style="float: right;color: #f5deb3;">
+                        <span onclick="javascript:onclick_open();"style="display: block;width: 80px;height: auto; cursor: pointer; color: white; background-color: #faa51a">添加乘车人</span>
+                    </div>
+                </div>
+            <tr th:each="buyUser:${list1}" class="item-list">
+                <div class="bundle  bundle-last ">
+                    <div class="clear"></div>
+                    <div class="bundle-main">
+                        <div style="line-height: 49px;margin-left: 20px;float: left;font-size: 16px;">
+                            <span><td th:text="${buyUser.idnumber}"></td></span>
+                            <span><td th:text="${buyUser.name}"></td></span>
+                            <span><td th:text="${buyUser.phone}"></td></span>
+                        </div>
+                        <a href="" id="J_Go" class="submit-btn submit-btn-disabled">
+                            <div class="btn-area" style="float: right" th:idnumber="${buyUser.idnumber}"
+                                 onclick="delBuyUser(this)">
+                                <span style="color: white;margin-top: 1px">删除</span>
+                            </div>
+                        </a>
+<!--                        <a href="" id="J_Go1" class="submit-btn submit-btn-disabled">-->
+<!--                            <div class="btn-area" style="float: right;margin-right: 6px; display: block;" th:idnumber="${buyUser.idnumber}"-->
+<!--                                 onclick="javascript:onclick_open();">-->
+<!--                                <span style="color: white;">修改</span>-->
+<!--                            </div>-->
+<!--                        </a>-->
+
+                    </div>
+                </div>
+            </tr>
+
+            <div class="shade_content">
+                <div class="col-xs-12 shade_colse">
+                    <button onclick="javascript:onclick_close();">x</button>
+                </div>
+                <div class="nav shade_content_div">
+                    <div class="col-xs-12 shade_title">
+                        新增乘车人
+                    </div>
+                    <div class="col-xs-12 shade_from">
+                        <div class="col-xs-12">
+                            <span class="span_style">身份证号</span>
+                            <input class="input_style" type="" name="idnumber" id="idnumber" value=""
+                                   placeholder="&nbsp;&nbsp;请输入身份证号"/>
+                        </div>
+                        <div class="col-xs-12">
+                            <span class="span_style">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span>
+                            <input class="input_style" type="" name="name" id="name" value=""
+                                   placeholder="&nbsp;&nbsp;请输入您的姓名"/>
+                        </div>
+                        <div class="col-xs-12">
+                            <span class="span_style">手机号码</span>
+                            <input class="input_style" type="" name="phone" id="phone" value=""
+                                   placeholder="&nbsp;&nbsp;请输入您的手机号码"/>
+                        </div>
+                        <div class="col-xs-12">
+                            <input class="btn_remove" type="button" onclick="javascript:onclick_close();" style="margin-right:3px;" value="取消"/>
+                            <input type="submit" class="sub_set" id="sub_setID" value="提交" onclick="insertBuyUser()"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 100px"><a href="#mao3" class="maodian" id="mao3"></a> 修改密码</h2>
+            <div class="clear"></div>
+            <h3 style="text-align: center">修改登录密码</h3>
+            <div style="width: 100%;height: auto;margin-top: 30px;padding-bottom: 30px;border-bottom: 10px solid whitesmoke">
+                <div style="width:400px;height:100px;margin:0 auto">
+
+                    <input required='' type='password' id="password">
+                    <label alt='输入旧密码' placeholder='旧密码'></label>
+
+                </div>
+                <div style="width:400px;height:100px;margin:0 auto">
+
+                    <input required='' type='password' id="newpassword1">
+                    <label alt='输入新密码' placeholder='新密码'></label>
+
+                </div>
+                <div style="width:400px;height:100px;margin:0 auto">
+
+                    <input required='' type='password' id="newpassword2">
+                    <label alt='确认新密码' placeholder='新密码'></label>
+
+                </div>
+                <button class="button white" style="margin-left: 45%" onclick="updatePassword()">确定修改</button>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

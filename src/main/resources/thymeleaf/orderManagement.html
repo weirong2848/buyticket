@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="../css/reset.css" rel="stylesheet" />
+    <link href="../css/iconfont.css" rel="stylesheet" />
+    <link href="../css/index.css" rel="stylesheet" />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/management.js"></script>
+    <title>订单管理</title>
+
+    <script type="text/javascript">
+        function selOneOrder() {
+            var orderid = document.getElementById("selOrderid").value;
+            if (orderid != ""){
+                $.ajax({
+                    type: "post",
+                    url: "selOneOrder",
+                    cache: true,
+                    datatype: "json",
+                    data:{
+                        orderid:orderid
+                    },
+                    success: function (data) {
+                        if(data == "1"){
+                            alert("要查询的订单信息不存在");
+                        }else {
+                            window.location.href = 'inOneOrderManagement';
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }else {
+                alert("请输入订单号");
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="PublicHead clearfix">
+    <div class="leftBox clearfix">
+<!--        <div class="companyLogo">-->
+<!--            <img src="images/logo.jpg" />-->
+<!--        </div>-->
+        <!--<i class="iconfont icon-caidan"></i>-->
+
+        <div class="companyText">
+            购票系统后台管理系统
+        </div>
+    </div>
+    <div class="RightBox clearfix">
+        <div class="UserPhotoBox">
+            <div class="UserPic">
+                <!--                <img src="images/user.jpg" />-->
+            </div>
+            <div class="UserName">
+                欢迎管理员进入
+            </div>
+        </div>
+        <a href="../index/inLogin">
+            <div class="dropOutBox">
+                <i class="iconfont icon-app_icons--">
+                </i>
+                <span>退出</span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="PublicDownWhole clearfix">
+    <!--左侧-->
+    <div class="leftBox">
+        <ul>
+            <a href="inManagement"> <li><i class="iconfont "></i><span>售票所得情况</span></li></a>
+            <a href="inAdmainManagement"> <li class=""><i class="iconfont "></i><span>登入密码修改</span></li></a>
+            <a href="inOrderManagement">
+                <li class="Select"><i class="iconfont "></i><span>订单管理</span></li>
+            </a>
+            <a href="inNoticeManagement">
+                <li><i class="iconfont "></i><span>公告管理</span></li>
+            </a>
+            <a href="inRouteManagement">
+                <li><i class="iconfont"></i><span>路线管理</span></li>
+            </a>
+            <a href="inTicketManagement">      <li><i class="iconfont "></i><span>车票管理</span></li></a>
+        </ul>
+    </div>
+    <!--右侧-->
+    <div class="RightBox">
+        <div class="PublicContentBox">
+            <!--公用指向页面名字-->
+            <div class="PublicPointToAgeText">
+                <span class="span1"></span> <span class="span2">订单管理</span>
+            </div>
+            <!--查询-->
+            <div class="InquireBox clearfix">
+                <div class="InquireleftBox">
+                    <div class="Text">订单号：</div>
+                    <div class="InputDiv">   <input id="selOrderid" class="phoneInput" placeholder="请输入你需要查询的订单号" /></div>
+                </div>
+                <div class="PublicBtnIcon Color1Btn fr" onclick="selOneOrder()">
+                    <i class="iconfont icon-icon-chaxun"></i>
+                    <span>查询</span>
+                </div>
+            </div>
+            <!--表修改-->
+            <div class="InquireTableBox">
+                <div class="headbox">
+                    <div class="headboxtext">
+                        <span class="span1">订单管理列表</span>
+                    </div>
+                    <!--批量删除-->
+                    <div class="PublicBtnIcon Color5Btn">
+                        <i class="iconfont  icon-shanchu"></i>
+<!--                        <span>批量删除</span>-->
+                    </div>
+
+                    <!--<div class="PublicBtnIcon Color2Btn fr Js_edit">
+                        <i class="iconfont icon-changyongtubiao-mianxing-"></i>
+                        <span>添加</span>
+                    </div>-->
+                </div>
+
+                <!--查询到的表格-->
+
+                <div class="InquireSelectTable">
+                    <table class="PublicTableCss">
+                        <thead>
+                        <tr>
+<!--                            <td>-->
+<!--                                <input id="inputcheck" class="inputcheck" type="checkbox" name="inputcheck" />-->
+<!--                                <label for="inputcheck"></label>-->
+<!--                                <span>全选</span>-->
+<!--                            </td>-->
+                            <td>订单编号</td>
+                            <td>下单用户</td>
+                            <td>下单时间</td>
+                            <td>实付金额</td>
+                            <td>班次号</td>
+                            <td>出发站-到达站</td>
+                            <td>乘车人姓名</td>
+                            <td>乘车人手机</td>
+                            <td>订单状态</td>
+<!--                            <td>操作</td>-->
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        <tr th:each="order:${pageInfo.list}">
+<!--                            <td>-->
+<!--                                <input id="aa" class="inputcheck" type="checkbox" name="inputcheck" />-->
+<!--                                <label for="aa"></label>-->
+<!--                            </td>-->
+                            <td th:text="${order.orderid}"></td>
+                            <td th:text="${order.username}"></td>
+                            <td th:text="${order.orderTime}"></td>
+                            <td th:text="${order.money}"></td>
+                            <td th:text="${order.flightNumber}"></td>
+                            <td th:text="${order.departureStation}+'-'+${order.arrivalStation}"></td>
+                            <td th:text="${order.name}"></td>
+                            <td th:text="${order.phone}"></td>
+                            <td th:if="${order.state ==0}">待支付</td>
+                            <td th:if="${order.state ==1}">已支付</td>
+                            <td th:if="${order.state ==2}">已退款</td>
+<!--                            <td>-->
+<!--                                <div class="PublicTableBtnIcon Color3Btn Js_edit">-->
+<!--                                    <i class="iconfont icon-tubiaozhizuomobanyihuifu-"></i>-->
+<!--                                    <span>编辑</span>-->
+<!--                                </div>-->
+
+<!--                                <div class="PublicTableBtnIcon Color4Btn Js_delete">-->
+<!--                                    <i class="iconfont icon-shanchu"></i>-->
+<!--                                    <span>删除</span>-->
+<!--                                </div>-->
+<!--                            </td>-->
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <!--分页-->
+                <div class="PageNumber">
+                    <div class="NumbersBox">
+                        <a th:href="@{'inOrderManagement?pageNo='+${pageInfo.firstPage}}" class="LeftArrow">首页</a>
+                        <th:block th:if="${pageInfo.hasPreviousPage}">
+                            <a th:href="@{'inOrderManagement?pageNo='+${pageInfo.prePage}}" class="LeftArrow">上一页</a>
+                        </th:block>
+                        <ul>
+                            <tr th:each="nav : ${pageInfo.navigatepageNums}">
+                                <li><a th:href="@{'inOrderManagement?pageNo='+${nav}}" th:text="${nav}"></a></li>
+                            </tr>
+                        </ul>
+                        <a th:href="@{'inOrderManagement?pageNo='+${pageInfo.lastPage}}" class="RightArrow ">尾页</a>
+                        <th:block th:if="${pageInfo.hasNextPage}">
+                            <a th:href="@{'inOrderManagement?pageNo='+${pageInfo.nextPage}}" class="RightArrow "> 下一页</a>
+                        </th:block>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- alert通用 提示是否删除-->
+<div class="PublicFloatBox f_delete">
+    <div class="f_MiddleBox wid260">
+        <div class="f_Head">
+            <span>提示消息</span>
+            <i class="Js_closeBtn iconfont icon-buoumaotubiao20 fr"></i>
+        </div>
+        <div class="f_content clearfix">
+            <!--提示消息内容-->
+            <div class="f_someText">
+                <i class="iconfont icon-tishi"></i>
+                <span>确定删除此信息？</span>
+            </div>
+            <!--按钮-->
+            <div class="f_pormatBtn  clearfix">
+                <div class="f_pormatBtn1">
+                    确定
+                </div>
+                <div class="f_pormatBtn2">
+                    删除
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加用户浮层-->
+<div class="PublicFloatBox adduser">
+    <div class="f_MiddleBox wid400">
+        <div class="f_Head">
+            <span>添加用户</span>
+            <i class="Js_closeBtn iconfont icon-buoumaotubiao20 fr"></i>
+        </div>
+        <div class="f_content">
+            <div class="f_alonediv">
+                <div class="f_alone_name">
+                    ID:
+                </div>
+                <div class="f_alone_input">
+                    <input class="f_p_input" />
+                </div>
+                <!--提示消息-->
+                <div class="f_pormat">
+                    请输入正确的ID
+                </div>
+            </div>
+            <div class="f_alonediv">
+                <div class="f_alone_name">
+                    手机号:
+                </div>
+                <div class="f_alone_input">
+                    <input class="f_p_input" />
+                </div>
+                <!--提示消息-->
+                <div class="f_pormat">
+                    请输入正确的手机号
+                </div>
+            </div>
+            <div class="f_alonediv1">
+                <div class="f_alone_name">
+                </div>
+                <div class="f_alone_input1">
+                    <!--publicbtn-->
+                    <div class="publicf_btn">
+                        <div class="publicf_btn1">
+                            确定
+                        </div>
+                        <div class="publicf_btn2 fr Js_closeBtn">
+                            取消
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

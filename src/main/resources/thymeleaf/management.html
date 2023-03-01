@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="../css/reset.css" rel="stylesheet" />
+    <link href="../css/iconfont.css" rel="stylesheet" />
+    <link href="../css/index.css" rel="stylesheet" />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/management.js"></script>
+<!--    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <title>管理页面</title>
+</head>
+<body>
+<div class="PublicHead clearfix">
+    <div class="leftBox clearfix">
+<!--                <div class="companyLogo">-->
+<!--                    <img src="images/logo.jpg" />-->
+<!--                </div>-->
+<!--        <i class="iconfont icon-caidan"></i>-->
+
+        <div class="companyText">
+            购票系统后台管理系统
+        </div>
+    </div>
+    <div class="RightBox clearfix">
+        <div class="UserPhotoBox">
+            <div class="UserPic">
+                <!--                <img src="images/user.jpg" />-->
+            </div>
+            <div class="UserName">
+                欢迎管理员进入
+            </div>
+        </div>
+        <a href="../index/inLogin">
+            <div class="dropOutBox">
+                <i class="iconfont icon-app_icons--">
+                </i>
+                <span>退出</span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="PublicDownWhole clearfix">
+    <!--左侧-->
+    <div class="leftBox">
+        <ul>
+            <a href="inManagement"> <li class="Select"><i class="iconfont "></i><span>售票所得情况</span></li></a>
+            <a href="inAdmainManagement"> <li class=""><i class="iconfont "></i><span>登入密码修改</span></li></a>
+            <a href="inOrderManagement">
+                <li ><i class="iconfont "></i><span>订单管理</span></li>
+            </a>
+            <a href="inNoticeManagement">
+                <li><i class="iconfont "></i><span>公告管理</span></li>
+            </a>
+            <a href="inRouteManagement">
+                <li><i class="iconfont "></i><span>路线管理</span></li>
+            </a>
+            <a href="inTicketManagement">      <li><i class="iconfont "></i><span>车票管理</span></li></a>
+        </ul>
+    </div>
+    <div id="myChart" style="width: 600px;height: 400px ;margin-left: 300px;margin-top: 100px"></div>
+    <script type="text/javascript" th:inline="javascript">
+        var time = [[${list1}]];
+        var money = [[${list2}]];
+        var myChart = echarts.init(document.getElementById('myChart'));
+        var lineOption = {//折线图
+            title:{
+                text:'购票系统近五天售票所得金额（单位/元）',
+                x:'center'
+            },
+            xAxis: {
+                type: 'category',
+                data: time
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: money,
+                type: 'line'
+            }]
+        };
+        if (lineOption && typeof lineOption === "object") {
+            myChart.setOption(lineOption, true);
+        }
+
+        myChart.setOption(lineOption);
+    </script>
+    <!--右侧-->
+</div>
+</body>
+</html>
